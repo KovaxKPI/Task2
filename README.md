@@ -15,3 +15,6 @@
      - PUT https://{{baseUrl}}/api/books/{id}/review
   7. Rate a book
      - PUT https://{{baseUrl}}/api/books/{id}/rate
+- Class diagram: 
+
+![Diagram](https://user-images.githubusercontent.com/86662348/184345547-5c9c91a5-1c49-42a8-8f30-3dc58f4546e5.jpg)
