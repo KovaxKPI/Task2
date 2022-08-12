@@ -49,7 +49,9 @@ namespace Task2.Controllers
         public IEnumerable<BookDetailDto> GetBookById(int id)
         {
             var book = _context.Books.Include(x => x.Ratings)
-                        .Include(y => y.Reviews).First(x => x.Id == id);
+                        .Include(y => y.Reviews).FirstOrDefault(x => x.Id == id);
+            if(book == null)
+                return Enumerable.Empty<BookDetailDto>();
             var b = new List<BookDetailDto>();
             b.Add(new BookDetailDto()
             {
@@ -79,7 +81,7 @@ namespace Task2.Controllers
             await _context.SaveChangesAsync();
             return new PostResponse() { Id = b.Id};
         }
-        [HttpDelete("{id:int}")]
+        [HttpDelete("delete/{id:int}")]
         public async void DeleteBook(int id)
         {
             var book = _context.Books.FirstOrDefault(x => x.Id == id);
