@@ -15,18 +15,18 @@ namespace Task2.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<BookDto>> Get(string genre)
+        public IEnumerable<BookDto> Get(string genre)
         {
-            var books = from b in _context.Books.Include(x => x.ratings)
-                        .Include(y => y.reviews)
+            var books = from b in _context.Books.Include(x => x.Ratings)
+                        .Include(y => y.Reviews)
                         .Where(x => x.Genre.Equals(genre, StringComparison.OrdinalIgnoreCase))
                         select new BookDto()
                         {
                             Id = b.Id,
                             Title = b.Title,
                             Author = b.Author,
-                            Rating = b.ratings.Average(x => x.Score),
-                            reviewsNumber = b.reviews.Count()
+                            Rating = b.Ratings == null || b.Ratings.Count == 0 ? 0 : b.Ratings.Average(x => x.Score),
+                            reviewsNumber = b.Reviews == null || b.Reviews.Count == 0 ? 0 : b.Reviews.Count()
                         };
             var rec = new List<BookDto>();
             foreach(var book in books.OrderByDescending(x => x.Rating))

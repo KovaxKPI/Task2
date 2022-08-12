@@ -7,8 +7,8 @@
      - GET https://{{baseUrl}}/api/recommended?genre=horror
   3. Get book details with the list of reviews
      - GET https://{{baseUrl}}/api/books/{id}
-  4. Delete a book using a secret key. Save the secret key in the config of your application. Compare this key with query param
-     - DELETE https://{{baseUrl}}/api/books/{id}?secret=qwerty
+  4. Delete a book 
+     - DELETE https://{{baseUrl}}/api/books/{id}
   5. Save a new book.
      - POST https://{{baseUrl}}/api/books/save
   6. Save a review for the book.

@@ -9,48 +9,47 @@ namespace Task2.Controllers
     public class BookController : ControllerBase
     {
         private ApiContext _context;
-        private string secret = "qwerty";
         public BookController(ApiContext context)
         {
             _context = context;
         }
         [HttpGet]
-        public async Task<IEnumerable<BookDto>> GetBooks()
+        public IEnumerable<BookDto> GetBooks()
         {
-            var books = from b in _context.Books.Include(x => x.ratings)
-                        .Include(y => y.reviews)
+            var books = from b in _context.Books.Include(x => x.Ratings)
+                        .Include(y => y.Reviews)
                         select new BookDto()
                         {
                             Id = b.Id,
                             Title = b.Title,
                             Author = b.Author,
-                            Rating = b.ratings == null || b.ratings.Count == 0 ? 0 : b.ratings.Average(x => x.Score),
-                            reviewsNumber = b.reviews.Count()
+                            Rating = b.Ratings == null || b.Ratings.Count == 0 ? 0 : b.Ratings.Average(x => x.Score),
+                            reviewsNumber = b.Reviews == null || b.Reviews.Count == 0 ? 0 : b.Reviews.Count()
                         };
             return books;
         }
         [HttpGet("{order:alpha}")]
-        public async Task<IEnumerable<BookDto>> GetBooksByOrder(string order)
+        public IEnumerable<BookDto> GetBooksByOrder(string order)
         {
-            var books = from b in _context.Books.Include(x => x.ratings)
-                        .Include(y => y.reviews)
+            var books = from b in _context.Books.Include(x => x.Ratings)
+                        .Include(y => y.Reviews)
                         select new BookDto()
                         {
                             Id = b.Id,
                             Title = b.Title,
                             Author = b.Author,
-                            Rating = b.ratings.Count == 0 || b.ratings == null ? 0 : b.ratings.Average(x => x.Score),
-                            reviewsNumber = b.reviews.Count()
+                            Rating = b.Ratings == null || b.Ratings.Count == 0 ? 0 : b.Ratings.Average(x => x.Score),
+                            reviewsNumber = b.Reviews == null || b.Reviews.Count == 0 ? 0 : b.Reviews.Count()
                         };
             if (order == "title")
                 return books.OrderBy(x => x.Title);
             return books.OrderBy(x => x.Author);
         }
         [HttpGet("{id:int}")]
-        public async Task<IEnumerable<BookDetailDto>> GetBookById(int id)
+        public IEnumerable<BookDetailDto> GetBookById(int id)
         {
-            var book = _context.Books.Include(x => x.ratings)
-                        .Include(y => y.reviews).First(x => x.Id == id);
+            var book = _context.Books.Include(x => x.Ratings)
+                        .Include(y => y.Reviews).First(x => x.Id == id);
             var b = new List<BookDetailDto>();
             b.Add(new BookDetailDto()
             {
@@ -59,8 +58,8 @@ namespace Task2.Controllers
                 Author = book.Author,
                 Cover = book.Cover,
                 Content = book.Content,
-                Rating = book.ratings == null || book.ratings.Count == 0 ?  0 : book.ratings.Average(x => x.Score),
-                reviews = book.reviews
+                Rating = book.Ratings == null || book.Ratings.Count == 0 ?  0 : book.Ratings.Average(x => x.Score),
+                Reviews = book.Reviews
             });
             return b;
         }
@@ -74,19 +73,20 @@ namespace Task2.Controllers
             b.Cover = book.Cover;
             b.Content = book.Content;
             b.Genre = book.Genre;
-            b.reviews = new List<Review>();
-            b.ratings = book.ratings;
+            b.Reviews = new List<Review>();
+            b.Ratings = book.Ratings;
             _context.Books.Add(b);
             await _context.SaveChangesAsync();
             return new PostResponse() { Id = b.Id};
         }
-        [HttpDelete("{id:int}/{secret:alpha}")]
-        public void DeleteBook(int id, string secret)
+        [HttpDelete("{id:int}")]
+        public async void DeleteBook(int id)
         {
-            if(secret == this.secret)
+            var book = _context.Books.FirstOrDefault(x => x.Id == id);
+            if(book != null)
             {
-                _context.Books.Remove(_context.Books.First(x => x.Id == id));
-                _context.SaveChangesAsync();
+                _context.Books.Remove(book);
+                await _context.SaveChangesAsync();
             }
         }
         [HttpPut("{id:int}/review")]
