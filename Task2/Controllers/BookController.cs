@@ -14,37 +14,37 @@ namespace Task2.Controllers
         {
             _bookService= bookService;
         }
-        [HttpGet]
+        [HttpGet("GetAllBooks")]
         public IQueryable<BookDto> GetBooks()
         {
             return _bookService.GetBooks();
         }
-        [HttpGet("{order:alpha}")]
+        [HttpGet("GetBooksByOrder")]
         public IQueryable<BookDto> GetBooksByOrder(string order)
         {
             return _bookService.GetBooksByOrder(order);
         }
-        [HttpGet("{id:int}")]
+        [HttpGet("GetBookById")]
         public BookDetailDto? GetBookById(int id)
         {
             return _bookService.GetBookById(id);
         }
-        [HttpPost]
+        [HttpPost("AddBook")]
         public async Task AddBook(BookPostDto book)
         {
             await _bookService.AddBook(book);
         }
-        [HttpDelete("delete/{id:int}")]
+        [HttpDelete("DeleteBook")]
         public async Task DeleteBook(int id)
         {
             await _bookService.DeleteBook(id);
         }
-        [HttpPut("{id:int}/review")]
+        [HttpPut("AddReview")]
         public async Task AddReview(int id, ReviewDto review)
         {
             await _bookService.AddReview(id, review);
         }
-        [HttpPut("{id:int}/rate")]
+        [HttpPut("AddRate")]
         public async Task AddRate(int id, RatingDto rating)
         {
             await _bookService.AddRate(id, rating);

@@ -15,7 +15,7 @@ namespace Task2.Controllers
             _recommendedService = recommendedService;
         }
 
-        [HttpGet]
+        [HttpGet("GetRecommendedBooksByGenre")]
         public IQueryable<BookDto> Get(string genre)
         {
             return _recommendedService.Get(genre);
