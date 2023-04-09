@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Task2.Models;
 
-namespace Task2
+namespace Task2.EF
 {
     public class DataGenerator
     {
