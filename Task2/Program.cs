@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Task2.Interfaces;
+using Task2.Services;
 
 namespace Task2
 {
@@ -15,6 +17,8 @@ namespace Task2
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<ApiContext>(opt => opt.UseInMemoryDatabase(databaseName : "Library"));
+            builder.Services.AddTransient<IBookService, BookService>();
+            builder.Services.AddTransient<IRecommendedService, RecommendedService>();
 
             var app = builder.Build();
 
@@ -38,7 +42,6 @@ namespace Task2
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
